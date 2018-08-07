@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2018/05/31/hello-world/index.html">
+<meta property="og:title" content="Java集合Map讲解">
+<meta property="og:url" content="http://yoursite.com/2018/08/07/Java集合Map讲解/index.html">
 <meta property="og:site_name" content="喝酒不骑马">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-07T13:12:46.410Z">
+<meta property="og:updated_time" content="2018-08-07T13:33:28.547Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="twitter:title" content="Java集合Map讲解">
+<meta name="twitter:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/31/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/07/Java集合Map讲解/"/>
 
 
 
 
 
-  <title>Hello World | 喝酒不骑马</title>
+  <title>Java集合Map讲解 | 喝酒不骑马</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/07/Java集合Map讲解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="coding.H">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Java集合Map讲解</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T10:56:47+08:00">
-                2018-05-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-07T21:19:52+08:00">
+                2018-08-07
               </time>
             
 
@@ -329,15 +329,54 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.<br><a id="more"></a></p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p>Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：<br><a id="more"></a></p>
+<ol>
+<li><code>void clear()</code>:删除Map中所以键值对。</li>
+<li><code>boolean containsKey(Object key)</code>:查询Map中是否包含指定key，如果包含则返回true。</li>
+<li><code>boolean containsValue(Object value)</code>:查询Map中是否包含指定value，如果包含则返回true。</li>
+<li><code>Set entrySet()</code>:返回Map中所包含的键值对所组成的Set集合，每个集合元素都是Map.Entry对象(Entry是Map的内部类)。</li>
+<li><code>Object get(Object key)</code>:返回指定key所对应的value，如Map中不包含key则返回null。</li>
+<li><code>boolean isEmpty()</code>:查询Map是否为空，如果空则返回true。</li>
+<li><code>Set keySet()</code>:返回该Map中所有key所组成的set集合。</li>
+<li><code>Object put(Object key,Object value)</code>:添加一个键值对，如果已有一个相同的key值则新的键值对覆盖旧的键值对。</li>
+<li><code>void putAll(Map m)</code>:将指定Map中的键值对复制到Map中。</li>
+<li><code>Object remove(Object key)</code>:删除指定key所对应的键值对，返回可以所关联的value，如果key不存在，返回null。</li>
+<li><code>int size()</code>:返回该Map里的键值对的个数。</li>
+<li><code>Collection values()</code>:返回该Map里所有value组成的Collection。</li>
+</ol>
+<p>Map中包含一个内部类：Entry。该类封装了一个键值对，它包含了三个方法：</p>
+<ol>
+<li>Object getKey():返回该Entry里包含的key值。</li>
+<li>Object getValeu():返回该Entry里包含的value值。</li>
+<li>Object setValue(V value):设置该Entry里包含的value值，并返回新设置的value值。</li>
+</ol>
+<h2 id="HashMap和Hashtable实现类"><a href="#HashMap和Hashtable实现类" class="headerlink" title="HashMap和Hashtable实现类"></a>HashMap和Hashtable实现类</h2><h3 id="HashMap与HashTable的区别："><a href="#HashMap与HashTable的区别：" class="headerlink" title="HashMap与HashTable的区别："></a>HashMap与HashTable的区别：</h3><ul>
+<li>同步性：Hashtable是同步的，这个类中的一些方法保证了Hashtable中的对象是线程安全的。而HashMap则是异步的，因此 HashMap中的对象并不是线程安全的。因为同步的要求会影响执行的效率，所以如果你不需要线程安全的集合那么使用HashMap是一个很好的选择，这 样可以避免由于同步带来的不必要的性能开销，从而提高效率。</li>
+<li>值：HashMap可以让你将空值作为一个表的条目的key或value，但是Hashtable是不能放入空值的。HashMap最多只有一个key值为null，但可以有无数多个value值为null。</li>
+</ul>
+<h3 id="两者的性能"><a href="#两者的性能" class="headerlink" title="两者的性能"></a>两者的性能</h3><p>HashMap的性能最好，HashTable的性能是最差（因为它是同步的）</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>用作key的对象必须实现hashCode和equals方法。</li>
+<li>不能保证其中的键值对的顺序</li>
+<li>尽量不要使用可变对象作为它们的key值。</li>
+</ul>
+<h2 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h2><p>它的父类是HashMap，使用双向链表来维护键值对的次序，迭代顺序与键值对的插入顺序保持一致。LinkedHashMap需要维护元素的插入顺序，so性能略低于HashMap，但在迭代访问元素时有很好的性能，因为它是以链表来维护内部顺序。</p>
+<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>Map接口派生了一个SortMap子接口，SortMap的实现类为TreeMap。TreeMap也是基于红黑树对所有的key进行排序，有两种排序 方式：自然排序和定制排序。Treemap的key以TreeSet的形式存储，对key的要求与TreeSet对元素的要求基本一致。</p>
+<ol>
+<li><code>Map.Entry firstEntry()</code>:返回最小key所对应的键值对，如Map为空，则返回null。</li>
+<li><code>Object firstKey()</code>:返回最小key，如果为空，则返回null。</li>
+<li><code>Map.Entry lastEntry()</code>:返回最大key所对应的键值对，如Map为空，则返回null。</li>
+<li><code>Object lastKey()</code>:返回最大key，如果为空，则返回null。</li>
+<li><code>Map.Entry higherEntry(Object key)</code>:返回位于key后一位的键值对，如果为空，则返回null。</li>
+<li><code>Map.Entry lowerEntry(Object key)</code>:返回位于key前一位的键值对，如果为空，则返回null。</li>
+<li><code>Object lowerKey(Object key)</code>:返回位于key前一位key值，如果为空，则返回null。</li>
+<li><code>NavigableMap subMap(Object fromKey,boolean fromlnclusive,Object toKey,boolean toInciusive)</code>:返回该Map的子Map，其key范围从fromKey到toKey。</li>
+<li><code>SortMap subMap(Object fromKey,Object toKey )</code>;返回该Map的子Map，其key范围从fromkey（包括）到tokey（不包括）。</li>
+<li><code>SortMap tailMap（Object fromkey ,boolean inclusive）</code>:返回该Map的子Map，其key范围大于fromkey（是否包括取决于第二个参数）的所有key。</li>
+<li><code>SortMap headMap（Object tokey ,boolean inclusive）</code>:返回该Map的子Map，其key范围小于tokey（是否包括取决于第二个参数）的所有key。</li>
+</ol>
+<h2 id="WeakHashMap"><a href="#WeakHashMap" class="headerlink" title="WeakHashMap"></a>WeakHashMap</h2><p>WeakHashMap与HashMap的用法基本相同，区别在于：后者的key保留对象的强引用，即只要HashMap对象不被销毁，其对象所有key所引用的对象不会被垃圾回收，HashMap也不会自动删除这些key所对应的键值对对象。但WeakHashMap的key所引用的对象没有被其他强引 用变量所引用，则这些key所引用的对象可能被回收。WeakHashMap中的每个key对象保存了实际对象的弱引用，当回收了该key所对应的实际对象后，WeakHashMap会自动删除该key所对应的键值对。</p>
+<h2 id="IdentityHashMap"><a href="#IdentityHashMap" class="headerlink" title="IdentityHashMap"></a>IdentityHashMap</h2><p>IdentityHashMap与HashMap基本相似，只是当两个key严格相等时，即key1==key2时，它才认为两个key是相等的 。IdentityHashMap也允许使用null，但不保证键值对之间的顺序。</p>
 
       
     </div>
@@ -362,15 +401,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/31/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/07/Java集合Map讲解/" rel="prev" title="Java集合Map讲解">
-                Java集合Map讲解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,7 +527,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap和Hashtable实现类"><span class="nav-number">1.</span> <span class="nav-text">HashMap和Hashtable实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap与HashTable的区别："><span class="nav-number">1.1.</span> <span class="nav-text">HashMap与HashTable的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两者的性能"><span class="nav-number">1.2.</span> <span class="nav-text">两者的性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">1.3.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedHashMap"><span class="nav-number">2.</span> <span class="nav-text">LinkedHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap"><span class="nav-number">3.</span> <span class="nav-text">TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakHashMap"><span class="nav-number">4.</span> <span class="nav-text">WeakHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IdentityHashMap"><span class="nav-number">5.</span> <span class="nav-text">IdentityHashMap</span></a></li></ol></div>
             
 
           </div>
