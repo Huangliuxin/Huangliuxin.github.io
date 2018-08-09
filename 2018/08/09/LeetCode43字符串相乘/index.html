@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Map," />
+  <meta name="keywords" content="算法，leetcode," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
-<meta name="keywords" content="Map">
+<meta name="description" content="题目：给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。">
+<meta name="keywords" content="算法，leetcode">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java集合Map讲解">
-<meta property="og:url" content="http://yoursite.com/2018/08/07/Java集合Map讲解/index.html">
+<meta property="og:title" content="LeetCode43字符串相乘">
+<meta property="og:url" content="http://yoursite.com/2018/08/09/LeetCode43字符串相乘/index.html">
 <meta property="og:site_name" content="喝酒不骑马">
-<meta property="og:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
+<meta property="og:description" content="题目：给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-08T01:49:26.297Z">
+<meta property="og:image" content="http://yoursite.com/upload/image/chengfa.png">
+<meta property="og:updated_time" content="2018-08-09T07:35:43.801Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java集合Map讲解">
-<meta name="twitter:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
+<meta name="twitter:title" content="LeetCode43字符串相乘">
+<meta name="twitter:description" content="题目：给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。">
+<meta name="twitter:image" content="http://yoursite.com/upload/image/chengfa.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/07/Java集合Map讲解/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/09/LeetCode43字符串相乘/"/>
 
 
 
 
 
-  <title>Java集合Map讲解 | 喝酒不骑马</title>
+  <title>LeetCode43字符串相乘 | 喝酒不骑马</title>
   
 
 
@@ -263,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/07/Java集合Map讲解/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/09/LeetCode43字符串相乘/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="coding.H">
@@ -280,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java集合Map讲解</h1>
+          <h1 class="post-title" itemprop="name headline">LeetCode43字符串相乘</h1>
         
 
         <div class="post-meta">
@@ -292,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-07T21:19:52+08:00">
-                2018-08-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-09T14:58:22+08:00">
+                2018-08-09
               </time>
             
 
@@ -315,8 +317,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">Java基础</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -352,54 +354,25 @@
       
 
       
-        <p>Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：<br><a id="more"></a></p>
-<ol>
-<li><code>void clear()</code>:删除Map中所以键值对。</li>
-<li><code>boolean containsKey(Object key)</code>:查询Map中是否包含指定key，如果包含则返回true。</li>
-<li><code>boolean containsValue(Object value)</code>:查询Map中是否包含指定value，如果包含则返回true。</li>
-<li><code>Set entrySet()</code>:返回Map中所包含的键值对所组成的Set集合，每个集合元素都是Map.Entry对象(Entry是Map的内部类)。</li>
-<li><code>Object get(Object key)</code>:返回指定key所对应的value，如Map中不包含key则返回null。</li>
-<li><code>boolean isEmpty()</code>:查询Map是否为空，如果空则返回true。</li>
-<li><code>Set keySet()</code>:返回该Map中所有key所组成的set集合。</li>
-<li><code>Object put(Object key,Object value)</code>:添加一个键值对，如果已有一个相同的key值则新的键值对覆盖旧的键值对。</li>
-<li><code>void putAll(Map m)</code>:将指定Map中的键值对复制到Map中。</li>
-<li><code>Object remove(Object key)</code>:删除指定key所对应的键值对，返回可以所关联的value，如果key不存在，返回null。</li>
-<li><code>int size()</code>:返回该Map里的键值对的个数。</li>
-<li><code>Collection values()</code>:返回该Map里所有value组成的Collection。</li>
-</ol>
-<p>Map中包含一个内部类：Entry。该类封装了一个键值对，它包含了三个方法：</p>
-<ol>
-<li>Object getKey():返回该Entry里包含的key值。</li>
-<li>Object getValeu():返回该Entry里包含的value值。</li>
-<li>Object setValue(V value):设置该Entry里包含的value值，并返回新设置的value值。</li>
-</ol>
-<h2 id="HashMap和Hashtable实现类"><a href="#HashMap和Hashtable实现类" class="headerlink" title="HashMap和Hashtable实现类"></a>HashMap和Hashtable实现类</h2><h3 id="HashMap与HashTable的区别："><a href="#HashMap与HashTable的区别：" class="headerlink" title="HashMap与HashTable的区别："></a>HashMap与HashTable的区别：</h3><ul>
-<li>同步性：Hashtable是同步的，这个类中的一些方法保证了Hashtable中的对象是线程安全的。而HashMap则是异步的，因此 HashMap中的对象并不是线程安全的。因为同步的要求会影响执行的效率，所以如果你不需要线程安全的集合那么使用HashMap是一个很好的选择，这 样可以避免由于同步带来的不必要的性能开销，从而提高效率。</li>
-<li>值：HashMap可以让你将空值作为一个表的条目的key或value，但是Hashtable是不能放入空值的。HashMap最多只有一个key值为null，但可以有无数多个value值为null。</li>
+        <h2 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h2><p>给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。<br><a id="more"></a></p>
+<h3 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h3><p><code>输入：num1=&quot;2&quot;,num2=&quot;3&quot;</code><br><code>输出：“6”</code></p>
+<h3 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h3><p><code>输入：num1=&quot;123&quot;,num2=&quot;456&quot;</code><br><code>输出：“56088”</code></p>
+<p>说明：</p>
+<ul>
+<li>num1 和 num2 的长度小于110。</li>
+<li>num1 和 num2 只包含数字 0-9。</li>
+<li>num1 和 num2 均不以零开头，除非是数字 0 本身。</li>
+<li>不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。</li>
 </ul>
-<h3 id="两者的性能"><a href="#两者的性能" class="headerlink" title="两者的性能"></a>两者的性能</h3><p>HashMap的性能最好，HashTable的性能是最差（因为它是同步的）</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
-<li>用作key的对象必须实现hashCode和equals方法。</li>
-<li>不能保证其中的键值对的顺序</li>
-<li>尽量不要使用可变对象作为它们的key值。</li>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>这道题就模拟我们平时做乘法的步骤就可以了。我们平时做乘法的方法的学名叫做：竖式运算（我也是刚知道这个名字）。下图就是我们所说的竖式运算方法：<br><img src="/upload/image/chengfa.png" alt=""></p>
+<ul>
+<li>为了循环方便，低位放在左边，高位放在右边。即：num1 =new StringBuilder(num1).reverse().toString();</li>
+<li>两个数相乘，所乘后的数字位数最多为两数位数之和，例如：两个两位数相乘，结果最高为4位数。则需要一个长度为两数位数之和的数组，把每一位的临时结果存起来。</li>
+<li>临时结果求法：例如，125<em>53，个位数为5</em>3=15；十位数为5<em>5+2</em>3=31；百位数为2<em>5+1</em>3=13；千位数：1<em>5=5；每一位都放在数组对应位置上，对应的代码为： d[i+j]+=a</em>b;</li>
+<li>然后再分离个位，十位；int digit = d[i]%10;int carry = d[i]/10;d[i+1]+=carry;先把余位数字digit插入StringBuilder,sb.insert(0,digit);每次都插到第一位，因为最低位是个位，后面的是高位。</li>
+<li>最后要注意把前面的0删掉。sb.deleteCharAt(0);</li>
 </ul>
-<h2 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h2><p>它的父类是HashMap，使用双向链表来维护键值对的次序，迭代顺序与键值对的插入顺序保持一致。LinkedHashMap需要维护元素的插入顺序，so性能略低于HashMap，但在迭代访问元素时有很好的性能，因为它是以链表来维护内部顺序。</p>
-<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>Map接口派生了一个SortMap子接口，SortMap的实现类为TreeMap。TreeMap也是基于红黑树对所有的key进行排序，有两种排序 方式：自然排序和定制排序。Treemap的key以TreeSet的形式存储，对key的要求与TreeSet对元素的要求基本一致。</p>
-<ol>
-<li><code>Map.Entry firstEntry()</code>:返回最小key所对应的键值对，如Map为空，则返回null。</li>
-<li><code>Object firstKey()</code>:返回最小key，如果为空，则返回null。</li>
-<li><code>Map.Entry lastEntry()</code>:返回最大key所对应的键值对，如Map为空，则返回null。</li>
-<li><code>Object lastKey()</code>:返回最大key，如果为空，则返回null。</li>
-<li><code>Map.Entry higherEntry(Object key)</code>:返回位于key后一位的键值对，如果为空，则返回null。</li>
-<li><code>Map.Entry lowerEntry(Object key)</code>:返回位于key前一位的键值对，如果为空，则返回null。</li>
-<li><code>Object lowerKey(Object key)</code>:返回位于key前一位key值，如果为空，则返回null。</li>
-<li><code>NavigableMap subMap(Object fromKey,boolean fromlnclusive,Object toKey,boolean toInciusive)</code>:返回该Map的子Map，其key范围从fromKey到toKey。</li>
-<li><code>SortMap subMap(Object fromKey,Object toKey )</code>;返回该Map的子Map，其key范围从fromkey（包括）到tokey（不包括）。</li>
-<li><code>SortMap tailMap（Object fromkey ,boolean inclusive）</code>:返回该Map的子Map，其key范围大于fromkey（是否包括取决于第二个参数）的所有key。</li>
-<li><code>SortMap headMap（Object tokey ,boolean inclusive）</code>:返回该Map的子Map，其key范围小于tokey（是否包括取决于第二个参数）的所有key。</li>
-</ol>
-<h2 id="WeakHashMap"><a href="#WeakHashMap" class="headerlink" title="WeakHashMap"></a>WeakHashMap</h2><p>WeakHashMap与HashMap的用法基本相同，区别在于：后者的key保留对象的强引用，即只要HashMap对象不被销毁，其对象所有key所引用的对象不会被垃圾回收，HashMap也不会自动删除这些key所对应的键值对对象。但WeakHashMap的key所引用的对象没有被其他强引 用变量所引用，则这些key所引用的对象可能被回收。WeakHashMap中的每个key对象保存了实际对象的弱引用，当回收了该key所对应的实际对象后，WeakHashMap会自动删除该key所对应的键值对。</p>
-<h2 id="IdentityHashMap"><a href="#IdentityHashMap" class="headerlink" title="IdentityHashMap"></a>IdentityHashMap</h2><p>IdentityHashMap与HashMap基本相似，只是当两个key严格相等时，即key1==key2时，它才认为两个key是相等的 。IdentityHashMap也允许使用null，但不保证键值对之间的顺序。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class leetcode43 &#123;</span><br><span class="line">    public String multiply(String num1,String num2)&#123;</span><br><span class="line">        num1 =new StringBuilder(num1).reverse().toString();</span><br><span class="line">        num2 = new StringBuilder(num2).reverse().toString();</span><br><span class="line">        int[] d = new int[num1.length()+num2.length()];</span><br><span class="line">        for (int i = 0; i &lt;num1.length() ; i++) &#123;</span><br><span class="line">            int a = num1.charAt(i)- &apos;0&apos;;</span><br><span class="line">            for (int j = 0; j &lt;num2.length() ; j++) &#123;</span><br><span class="line">                int b = num2.charAt(j)- &apos;0&apos;;</span><br><span class="line">                d[i+j]+=a*b;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        for (int i = 0; i &lt;d.length ; i++) &#123;</span><br><span class="line">            int digit = d[i]%10;</span><br><span class="line">            int carry = d[i]/10;</span><br><span class="line">            sb.insert(0,digit);</span><br><span class="line">            if (i&lt;d.length-1)&#123;</span><br><span class="line">                d[i+1]+=carry;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        while (sb.length()&gt;0 &amp;&amp; sb.charAt(0)==&apos;0&apos;)&#123;</span><br><span class="line">            sb.deleteCharAt(0);</span><br><span class="line">        &#125;</span><br><span class="line">        return sb.length()==0?&quot;0&quot;:sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String num1 =&quot;125&quot;;</span><br><span class="line">        String num2 = &quot;53&quot;;</span><br><span class="line">        leetcode43 ls =new leetcode43();</span><br><span class="line">        System.out.println(ls.multiply(num1,num2));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -417,7 +390,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Map/" rel="tag"># Map</a>
+            <a href="/tags/算法，leetcode/" rel="tag"># 算法，leetcode</a>
           
         </div>
       
@@ -430,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/31/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/08/08/快速排序/" rel="next" title="快速排序">
+                <i class="fa fa-chevron-left"></i> 快速排序
               </a>
             
           </div>
@@ -439,10 +412,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/08/快速排序/" rel="prev" title="快速排序">
-                快速排序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -578,7 +547,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap和Hashtable实现类"><span class="nav-number">1.</span> <span class="nav-text">HashMap和Hashtable实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap与HashTable的区别："><span class="nav-number">1.1.</span> <span class="nav-text">HashMap与HashTable的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两者的性能"><span class="nav-number">1.2.</span> <span class="nav-text">两者的性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">1.3.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedHashMap"><span class="nav-number">2.</span> <span class="nav-text">LinkedHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap"><span class="nav-number">3.</span> <span class="nav-text">TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakHashMap"><span class="nav-number">4.</span> <span class="nav-text">WeakHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IdentityHashMap"><span class="nav-number">5.</span> <span class="nav-text">IdentityHashMap</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目："><span class="nav-number">1.</span> <span class="nav-text">题目：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例1"><span class="nav-number">1.1.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例2"><span class="nav-number">1.2.</span> <span class="nav-text">示例2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题解"><span class="nav-number">2.</span> <span class="nav-text">题解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
             
 
           </div>
