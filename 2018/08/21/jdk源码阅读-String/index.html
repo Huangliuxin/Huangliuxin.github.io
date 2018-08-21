@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="jdk源码,String," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近一直在做leetcode上面关于字符串的题目，想着就来阅读一下String类的源码来深入理解String类的实现。String类是我们平时用的最多的一个类了，本篇文章阅读String类的源码，整理String类的设计与实现。本篇文章参考HollisChuang的博客成神系列">
+<meta name="keywords" content="jdk源码,String">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jdk源码阅读---String">
+<meta property="og:url" content="http://yoursite.com/2018/08/21/jdk源码阅读-String/index.html">
+<meta property="og:site_name" content="喝酒不骑马">
+<meta property="og:description" content="最近一直在做leetcode上面关于字符串的题目，想着就来阅读一下String类的源码来深入理解String类的实现。String类是我们平时用的最多的一个类了，本篇文章阅读String类的源码，整理String类的设计与实现。本篇文章参考HollisChuang的博客成神系列">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/upload/image/string.jpg">
+<meta property="og:updated_time" content="2018-08-21T07:36:19.119Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jdk源码阅读---String">
+<meta name="twitter:description" content="最近一直在做leetcode上面关于字符串的题目，想着就来阅读一下String类的源码来深入理解String类的实现。String类是我们平时用的最多的一个类了，本篇文章阅读String类的源码，整理String类的设计与实现。本篇文章参考HollisChuang的博客成神系列">
+<meta name="twitter:image" content="http://yoursite.com/upload/image/string.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/21/jdk源码阅读-String/"/>
+
+
+
+
+
+  <title>jdk源码阅读---String | 喝酒不骑马</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">喝酒不骑马</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">爱生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/21/jdk源码阅读-String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="coding.H">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/upload/image/jnbl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="喝酒不骑马">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jdk源码阅读---String</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-21T15:21:50+08:00">
+                2018-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk源码系列/" itemprop="url" rel="index">
+                    <span itemprop="name">jdk源码系列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近一直在做leetcode上面关于字符串的题目，想着就来阅读一下String类的源码来深入理解String类的实现。String类是我们平时用的最多的一个类了，本篇文章阅读String类的源码，整理String类的设计与实现。本篇文章参考HollisChuang的博客<a href="http://www.hollischuang.com/" target="_blank" rel="noopener">成神系列</a><br><a id="more"></a></p>
+<h2 id="String定义"><a href="#String定义" class="headerlink" title="String定义"></a>String定义</h2><p>首先String类位于java.lang包下面，jdk源码对String类的一段描述（好长）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * The &#123;@code String&#125; class represents character strings. All</span><br><span class="line"> * string literals in Java programs, such as &#123;@code &quot;abc&quot;&#125;, are</span><br><span class="line"> * implemented as instances of this class.</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * Strings are constant; their values cannot be changed after they</span><br><span class="line"> * are created. String buffers support mutable strings.</span><br><span class="line"> * Because String objects are immutable they can be shared. For example:</span><br><span class="line"> * &lt;blockquote&gt;&lt;pre&gt;</span><br><span class="line"> *     String str = &quot;abc&quot;;</span><br><span class="line"> * &lt;/pre&gt;&lt;/blockquote&gt;&lt;p&gt;</span><br><span class="line"> * is equivalent to:</span><br><span class="line"> * &lt;blockquote&gt;&lt;pre&gt;</span><br><span class="line"> *     char data[] = &#123;&apos;a&apos;, &apos;b&apos;, &apos;c&apos;&#125;;</span><br><span class="line"> *     String str = new String(data);</span><br><span class="line"> * &lt;/pre&gt;&lt;/blockquote&gt;&lt;p&gt;</span><br><span class="line"> * Here are some more examples of how strings can be used:</span><br><span class="line"> * &lt;blockquote&gt;&lt;pre&gt;</span><br><span class="line"> *     System.out.println(&quot;abc&quot;);</span><br><span class="line"> *     String cde = &quot;cde&quot;;</span><br><span class="line"> *     System.out.println(&quot;abc&quot; + cde);</span><br><span class="line"> *     String c = &quot;abc&quot;.substring(2,3);</span><br><span class="line"> *     String d = cde.substring(1, 2);</span><br><span class="line"> * &lt;/pre&gt;&lt;/blockquote&gt;</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * The class &#123;@code String&#125; includes methods for examining</span><br><span class="line"> * individual characters of the sequence, for comparing strings, for</span><br><span class="line"> * searching strings, for extracting substrings, and for creating a</span><br><span class="line"> * copy of a string with all characters translated to uppercase or to</span><br><span class="line"> * lowercase. Case mapping is based on the Unicode Standard version</span><br><span class="line"> * specified by the &#123;@link java.lang.Character Character&#125; class.</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * The Java language provides special support for the string</span><br><span class="line"> * concatenation operator (&amp;nbsp;+&amp;nbsp;), and for conversion of</span><br><span class="line"> * other objects to strings. String concatenation is implemented</span><br><span class="line"> * through the &#123;@code StringBuilder&#125;(or &#123;@code StringBuffer&#125;)</span><br><span class="line"> * class and its &#123;@code append&#125; method.</span><br><span class="line"> * String conversions are implemented through the method</span><br><span class="line"> * &#123;@code toString&#125;, defined by &#123;@code Object&#125; and</span><br><span class="line"> * inherited by all classes in Java. For additional information on</span><br><span class="line"> * string concatenation and conversion, see Gosling, Joy, and Steele,</span><br><span class="line"> * &lt;i&gt;The Java Language Specification&lt;/i&gt;.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt; Unless otherwise noted, passing a &lt;tt&gt;null&lt;/tt&gt; argument to a constructor</span><br><span class="line"> * or method in this class will cause a &#123;@link NullPointerException&#125; to be</span><br><span class="line"> * thrown.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;A &#123;@code String&#125; represents a string in the UTF-16 format</span><br><span class="line"> * in which &lt;em&gt;supplementary characters&lt;/em&gt; are represented by &lt;em&gt;surrogate</span><br><span class="line"> * pairs&lt;/em&gt; (see the section &lt;a href=&quot;Character.html#unicode&quot;&gt;Unicode</span><br><span class="line"> * Character Representations&lt;/a&gt; in the &#123;@code Character&#125; class for</span><br><span class="line"> * more information).</span><br><span class="line"> * Index values refer to &#123;@code char&#125; code units, so a supplementary</span><br><span class="line"> * character uses two positions in a &#123;@code String&#125;.</span><br><span class="line"> * &lt;p&gt;The &#123;@code String&#125; class provides methods for dealing with</span><br><span class="line"> * Unicode code points (i.e., characters), in addition to those for</span><br><span class="line"> * dealing with Unicode code units (i.e., &#123;@code char&#125; values).</span><br><span class="line"> */</span><br></pre></td></tr></table></figure></p>
+<p>主要意思就是以下几点：</p>
+<ol>
+<li>String类表示字符串，例如“abc”就是String的一个实例。字符串一旦创建它的value是不可变的，因为String的对象是不可变的，所以它们可以被共享;</li>
+<li>String类包括一些方法，比如字符串比较、寻找字串、大小写转换……</li>
+<li>java语言提供了支持字符间的连接操作和将对象转化为字符串的操作，字符间的连接是通过 “+” 来操作的， 它们之所以可以连接是因为通过 StringBuffrer 或者 StringBuilder 的 append 方法实现的，而将对象转化成字符串 是通过Object方法中的toString方法。</li>
+<li>携带null这个参数给String的构造函数或者方法，String会抛出NullPointerException。</li>
+<li>String 表示一个 UTF-16 格式的字符串。其中的 增补字符 由 代理项对 表示，索引值是指 char 代码单元，因此增补字符在 String 中占用两个位置。</li>
+</ol>
+<p>String类的定义：<br><code>public final class String implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence{}</code><br>String实现了java.io.Serializable, Comparable, CharSequence接口。同时String是final类型的不能被继承。</p>
+<h2 id="String属性"><a href="#String属性" class="headerlink" title="String属性"></a>String属性</h2><p><code>private final char value[];</code></p>
+<blockquote>
+<p>这是一个字符数组，并且是final类型，他用于存储字符串内容，从fianl这个关键字中我们可以看出，String的内容一旦被初始化了是不能被更改的。 虽然有这样的例子： String s = “a”; s = “b” 但是，这并不是对s的修改，而是重新指向了新的字符串， 从这里我们也能知道，String其实就是用char[]实现的。</p>
+</blockquote>
+<p><code>private int hash;</code></p>
+<blockquote>
+<p>缓存字符串的hash Code，默认值为 0</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private static final long serialVersionUID = -6849794470754667710L;</span><br><span class="line">private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>因为String实现了Serializable接口，所以支持序列化和反序列化支持。<br>Java的序列化机制是通过在运行时判断类的serialVersionUID来验证版本一致性的。<br>在进行反序列化时，JVM会把传来的字节流中的serialVersionUID与本地相应实体（类）的serialVersionUID进行比较，如果相同就认为是一致的，可以进行反序列化，否则就会出现序列化版本不一致的异常(InvalidCastException)。</p>
+</blockquote>
+<h2 id="String常用构造方法"><a href="#String常用构造方法" class="headerlink" title="String常用构造方法"></a>String常用构造方法</h2><h3 id="使用字符串构造一个String"><a href="#使用字符串构造一个String" class="headerlink" title="使用字符串构造一个String"></a>使用字符串构造一个String</h3><p>首先思考：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String msg1 = &quot;I Love you&quot;;</span><br><span class="line">String msg2 = new String(&quot;I Love you&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>string1==string2返回false。</p>
+<p>我们知道string1是从常量池去取的，而我们new String() 这时候应该在堆内存产生一个String对象，而通过源码可以看到这个 String对象方法是将我们传入的这个 “I Love You !” 对象的value和hash进行复制：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public String (String original)&#123;</span><br><span class="line">    this.value=original.value;</span><br><span class="line">    this.hash = original.hash;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>jdk7之后字符串常量池放在堆中了，对应的内存模型为：<br><img src="/upload/image/string.jpg" alt=""></p>
+<h3 id="使用字符数组构造String"><a href="#使用字符数组构造String" class="headerlink" title="使用字符数组构造String"></a>使用字符数组构造String</h3><p>我们可以创建一个char[],然后传给String构造函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">char[] c =new char[3];</span><br><span class="line">c[0] = &apos;I&apos;;</span><br><span class="line">c[1] = &apos;L&apos;;</span><br><span class="line">c[0] = &apos;Y&apos;;</span><br><span class="line">String msg = new String(c);</span><br><span class="line">System.out.println(msg);</span><br></pre></td></tr></table></figure></p>
+<p>String的字符数组构造函数为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public String(char value[]) &#123;</span><br><span class="line">        this.value = Arrays.copyOf(value, value.length);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>原来它通过 Arrays.copyOf 把我们的char直接复制给value了！ 其实我们应该也猜到了，String里面的value就是char数组！</p>
+<h3 id="使用字节数组构造String"><a href="#使用字节数组构造String" class="headerlink" title="使用字节数组构造String"></a>使用字节数组构造String</h3><p>在Java中，String实例中保存有一个char[]字符数组，char[]字符数组是以unicode码来存储的，String 和 char 为内存形式，byte是网络传输或存储的序列化形式。所以在很多传输和存储的过程中需要将byte[]数组和String进行相互转化。所以，String提供了一系列重载的构造方法来将一个字符数组转化成String，提到byte[]和String之间的相互转换就不得不关注编码问题。String(byte[] bytes, Charset charset)是指通过charset来解码指定的byte数组，将其解码成unicode的char[]数组，够造成新的String。</p>
+<blockquote>
+<p>这里的bytes字节流是使用charset进行编码的，想要将他转换成unicode的char[]数组，而又保证不出现乱码，那就要指定其解码方式</p>
+</blockquote>
+<p>同样使用字节数组来构造String也有很多种形式，按照是否指定解码方式分的话可以分为两种：</p>
+<blockquote>
+<p>String(byte bytes[]) String(byte bytes[], int offset, int length)<br>String(byte bytes[], Charset charset)<br>String(byte bytes[], String charsetName)<br>String(byte bytes[], int offset, int length, Charset charset)<br>String(byte bytes[], int offset, int length, String charsetName)</p>
+</blockquote>
+<p>如果我们在使用byte[]构造String的时候，使用的是下面这四种构造方法(带有charsetName或者charset参数)的一种的话，那么就会使用StringCoding.decode方法进行解码，使用的解码的字符集就是我们指定的charsetName或者charset。 我们在使用byte[]构造String的时候，如果没有指明解码使用的字符集的话，那么StringCoding的decode方法首先调用系统的默认编码格式，如果没有指定编码格式则默认使用ISO-8859-1编码格式进行编码操作。主要体现代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">static char[] decode(byte[] ba, int off, int len) &#123;</span><br><span class="line">      String csn = Charset.defaultCharset().name();</span><br><span class="line">      try &#123;</span><br><span class="line">          // use charset name decode() variant which provides caching.</span><br><span class="line">          return decode(csn, ba, off, len);</span><br><span class="line">      &#125; catch (UnsupportedEncodingException x) &#123;</span><br><span class="line">          warnUnsupportedCharset(csn);</span><br><span class="line">      &#125;</span><br><span class="line">      try &#123;</span><br><span class="line">          return decode(&quot;ISO-8859-1&quot;, ba, off, len);</span><br><span class="line">      &#125; catch (UnsupportedEncodingException x) &#123;</span><br><span class="line">          // If this code is hit during VM initialization, MessageUtils is</span><br><span class="line">          // the only way we will be able to get any kind of error message.</span><br><span class="line">          MessageUtils.err(&quot;ISO-8859-1 charset not available: &quot;</span><br><span class="line">                           + x.toString());</span><br><span class="line">          // If we can not find ISO-8859-1 (a required encoding) then things</span><br><span class="line">          // are seriously wrong with the installation.</span><br><span class="line">          System.exit(1);</span><br><span class="line">          return null;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="String常用方法"><a href="#String常用方法" class="headerlink" title="String常用方法"></a>String常用方法</h2><h3 id="charAt-int-index"><a href="#charAt-int-index" class="headerlink" title="charAt(int index)"></a>charAt(int index)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String msg = &quot;I Love you&quot;</span><br><span class="line">char ch = msg.charAt(3);</span><br><span class="line">System.out.println(ch);//输出o</span><br></pre></td></tr></table></figure>
+<p>charAt(int index)方法根据索引返回Char值。</p>
+<p>charAt(int index)方法的源码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public char charAt(int index) &#123;</span><br><span class="line">    if ((index &lt; 0) || (index &gt;= value.length)) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(index);</span><br><span class="line">    &#125;</span><br><span class="line">    return value[index];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出charAt()方法的源码实现其实就是字符串对应的value数组返回它索引值对应的字符。</p>
+<h3 id="equals-Object-anObject"><a href="#equals-Object-anObject" class="headerlink" title="equals(Object anObject)"></a>equals(Object anObject)</h3><p>equals我们通常用于比较是否相同，先看看下面的例子输出的是什么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;I Love you&quot;;</span><br><span class="line">String s1 = &quot;I Love you&quot;;</span><br><span class="line">String s2 = new String(&quot;I Love you&quot;);</span><br><span class="line">System.out.println(s==s1);</span><br><span class="line">System.out.println(s.equals(s1));</span><br><span class="line">System.out.println(s==s2);</span><br><span class="line">System.out.println(s.equals(s2));</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为：true，true，false，true</p>
+<p>可能有些人会奇怪会什么 s == s2 是false？ 他们不是都是是 ““I Love You !” 吗？ 这时候我们就要来看看 == 和 equals 的区别了！</p>
+<p>其实 == 比较的是他们的地址值（hashcode），我们知道String是不可变的，我们可以知道s 和 s1 指向的都是 “I Love You !”;所以他们的hashcode是一样的。所以返回true; 而s 和 s2 他们指向的地址是不一样的所以是false;</p>
+<p>可能此刻有人会疑惑那么为什么s.equals(s2)返回的是true了。这时候我们应该可以猜到equals应该判断的不是 两个对象间的hashcode吧，我们看下源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object anObject) &#123;</span><br><span class="line">    if (this == anObject) &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    if (anObject instanceof String) &#123;</span><br><span class="line">        String anotherString = (String)anObject;</span><br><span class="line">        int n = value.length;</span><br><span class="line">        if (n == anotherString.value.length) &#123;</span><br><span class="line">            char v1[] = value;</span><br><span class="line">            char v2[] = anotherString.value;</span><br><span class="line">            int i = 0;</span><br><span class="line">            while (n-- != 0) &#123;</span><br><span class="line">                if (v1[i] != v2[i])</span><br><span class="line">                    return false;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法首先判断this == anObject ？，也就是说判断要比较的对象和当前对象是不是同一个对象，如果是直接返回true，如不是再继续比较，然后在判断anObject是不是String类型的，如果不是，直接返回false,如果是再继续比较，到了能终于比较字符数组的时候，他还是先比较了两个数组的长度，不一样直接返回false，一样再逐一比较值。 </p>
+<h3 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode"></a>hashCode</h3><p>hashCode的实现其实就是使用数学公式：<br><code>s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]</code></p>
+<p>s[i]是string的第i个字符，n是String的长度。那为什么这里用31，而不是其它数呢? 计算机的乘法涉及到移位计算。当一个数乘以2时，就直接拿该数左移一位即可！选择31原因是因为31是一个素数！</p>
+<p>在存储数据计算hash地址的时候，我们希望尽量减少有同样的hash地址，所谓“冲突”。如果使用相同hash地址的数据过多，那么这些数据所组成的hash链就更长，从而降低了查询效率！所以在选择系数的时候要选择尽量长的系数并且让乘法尽量不要溢出的系数，因为如果计算出来的hash地址越大，所谓的“冲突”就越少，查找起来效率也会提高。</p>
+<p>31可以 由i*31== (i&lt;&lt;5)-1来表示，现在很多虚拟机里面都有做相关优化，使用31的原因可能是为了更好的分配hash地址，并且31只占用5bits！</p>
+<p>在java乘法中如果数字相乘过大会导致溢出的问题，从而导致数据的丢失.</p>
+<p>而31则是素数（质数）而且不是很长的数字，最终它被选择为相乘的系数的原因不过与此！</p>
+<blockquote>
+<p>在Java中，整型数是32位的，也就是说最多有2^32= 4294967296个整数，将任意一个字符串，经过hashCode计算之后，得到的整数应该在这4294967296数之中。那么，最多有 4294967297个不同的字符串作hashCode之后，肯定有两个结果是一样的, hashCode可以保证相同的字符串的hash值肯定相同，但是，hash值相同并不一定是value值就相同。</p>
+</blockquote>
+<h3 id="endsWith-String-suffix"><a href="#endsWith-String-suffix" class="headerlink" title="endsWith(String suffix)"></a>endsWith(String suffix)</h3><p>有时候我们可能会判断字符串是否以指定的后缀结束。例如我们有获取的图片路径，判断他是不是以.jpg结尾的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;canglaoshi.jpg&quot;;</span><br><span class="line">System.out.println(s.endsWith(&quot;.jpg&quot;));//true</span><br></pre></td></tr></table></figure></p>
+<p>那么endsWith()内部是怎么判断的呢？我们看endsWith()的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean endsWith(String suffix) &#123;</span><br><span class="line">        return startsWith(suffix, value.length - suffix.value.length);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>它又调用startsWith(String prefix, int toffset)方法，我们来看startsWith(String prefix, int toffset)的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public boolean startsWith(String prefix, int toffset) &#123;</span><br><span class="line">    char ta[] = value;</span><br><span class="line">    int to = toffset;</span><br><span class="line">    char pa[] = prefix.value;</span><br><span class="line">    int po = 0;</span><br><span class="line">    int pc = prefix.value.length;</span><br><span class="line">    // Note: toffset might be near -1&gt;&gt;&gt;1.</span><br><span class="line">    if ((toffset &lt; 0) || (toffset &gt; value.length - pc)) &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    while (--pc &gt;= 0) &#123;</span><br><span class="line">        if (ta[to++] != pa[po++]) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>startsWith() 方法用于检测字符串是否以指定的前缀开始。</p>
+<p>prefix – 前缀。</p>
+<p>toffset – 字符串中开始查找的位置。</p>
+<p>用 ta[] 这个数组来存放 “canglaoshi.jpg”; 用 int to 来接收 “canglaoshi.jpg”的长度（14） 减去 “.jpg” 的长度（4） = 10;用 pa[] 来存放 “.jpg”;用int pc 来接收 “.jpg”的长度;最后就是以pc为次数进行遍历ta[]从下标为to开始，pa[] 从下标为0开始逐一判断，如果相同就返回true！</p>
+<h3 id="replace-char-oldChar-char-newChar"><a href="#replace-char-oldChar-char-newChar" class="headerlink" title="replace(char oldChar, char newChar)"></a>replace(char oldChar, char newChar)</h3><p>返回一个新的字符串，它是通过用 newChar 替换此字符串中出现的所有 oldChar 得到的。 那么问题来了，下面这一段输出的是什么呢？<br><code>String s = &quot;I Love you&quot;; s.replace(&quot;Love&quot;,&quot;Miss&quot;);System.out.println(s);</code><br>因为String是不可变的，所以s还是I Love you,而String s2 = s.replace(“Love”,”Miss”);这样s2才是”I Miss you“；</p>
+<p>replace(char oldChar, char newChar)方法的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public String replace(char oldChar, char newChar) &#123;</span><br><span class="line">    if (oldChar != newChar) &#123;</span><br><span class="line">        int len = value.length;</span><br><span class="line">        int i = -1;</span><br><span class="line">        char[] val = value; /* avoid getfield opcode */</span><br><span class="line"></span><br><span class="line">        while (++i &lt; len) &#123;</span><br><span class="line">            if (val[i] == oldChar) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (i &lt; len) &#123;</span><br><span class="line">            char buf[] = new char[len];</span><br><span class="line">            for (int j = 0; j &lt; i; j++) &#123;</span><br><span class="line">                buf[j] = val[j];</span><br><span class="line">            &#125;</span><br><span class="line">            while (i &lt; len) &#123;</span><br><span class="line">                char c = val[i];</span><br><span class="line">                buf[i] = (c == oldChar) ? newChar : c;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            return new String(buf, true);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="substring-int-beginIndex"><a href="#substring-int-beginIndex" class="headerlink" title="substring(int beginIndex)"></a>substring(int beginIndex)</h3><p>返回一个新的字符串，它是此字符串的一个子字符串。 可以理解为截取字符串，它的实现就是用数组的copyOfRange将指定数组的指定范围复制到一个新数组：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public String substring(int beginIndex, int endIndex) &#123;</span><br><span class="line">    if (beginIndex &lt; 0) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(beginIndex);</span><br><span class="line">    &#125;</span><br><span class="line">    if (endIndex &gt; value.length) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(endIndex);</span><br><span class="line">    &#125;</span><br><span class="line">    int subLen = endIndex - beginIndex;</span><br><span class="line">    if (subLen &lt; 0) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(subLen);</span><br><span class="line">    &#125;</span><br><span class="line">    return ((beginIndex == 0) &amp;&amp; (endIndex == value.length)) ? this</span><br><span class="line">            : new String(value, beginIndex, subLen);</span><br><span class="line">&#125;</span><br><span class="line">public String substring(int beginIndex) &#123;</span><br><span class="line">    if (beginIndex &lt; 0) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(beginIndex);</span><br><span class="line">    &#125;</span><br><span class="line">    int subLen = value.length - beginIndex;</span><br><span class="line">    if (subLen &lt; 0) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(subLen);</span><br><span class="line">    &#125;</span><br><span class="line">    return (beginIndex == 0) ? this : new String(value, beginIndex, subLen);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="String-valueOf和Integer-toString的区别"><a href="#String-valueOf和Integer-toString的区别" class="headerlink" title="String.valueOf和Integer.toString的区别"></a>String.valueOf和Integer.toString的区别</h3><p>接下来我们看以下这段代码，我们有三种方式将一个int类型的变量变成呢过String类型，那么他们有什么区别？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.int i = 5;</span><br><span class="line">2.String i1 = &quot;&quot; + i;</span><br><span class="line">3.String i2 = String.valueOf(i);</span><br><span class="line">4.String i3 = Integer.toString(i);</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>1、第三行和第四行没有任何区别，因为String.valueOf(i)也是调用Integer.toString(i)来实现的。 2、第二行代码其实是String i1 = (new StringBuilder()).append(i).toString();，首先创建一个StringBuilder对象，然后再调用append方法，再调用toString方法。</p>
+</blockquote>
+<p>最后，至于String为什么要设置为final的呢？可以进一步思考。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jdk源码/" rel="tag"># jdk源码</a>
+          
+            <a href="/tags/String/" rel="tag"># String</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/20/堆排序/" rel="next" title="堆排序">
+                <i class="fa fa-chevron-left"></i> 堆排序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/upload/image/jnbl.jpg"
+                alt="coding.H" />
+            
+              <p class="site-author-name" itemprop="name">coding.H</p>
+              <p class="site-description motion-element" itemprop="description">Just Coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#String定义"><span class="nav-number">1.</span> <span class="nav-text">String定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String属性"><span class="nav-number">2.</span> <span class="nav-text">String属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String常用构造方法"><span class="nav-number">3.</span> <span class="nav-text">String常用构造方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用字符串构造一个String"><span class="nav-number">3.1.</span> <span class="nav-text">使用字符串构造一个String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用字符数组构造String"><span class="nav-number">3.2.</span> <span class="nav-text">使用字符数组构造String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用字节数组构造String"><span class="nav-number">3.3.</span> <span class="nav-text">使用字节数组构造String</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String常用方法"><span class="nav-number">4.</span> <span class="nav-text">String常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#charAt-int-index"><span class="nav-number">4.1.</span> <span class="nav-text">charAt(int index)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equals-Object-anObject"><span class="nav-number">4.2.</span> <span class="nav-text">equals(Object anObject)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode"><span class="nav-number">4.3.</span> <span class="nav-text">hashCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#endsWith-String-suffix"><span class="nav-number">4.4.</span> <span class="nav-text">endsWith(String suffix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#replace-char-oldChar-char-newChar"><span class="nav-number">4.5.</span> <span class="nav-text">replace(char oldChar, char newChar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#substring-int-beginIndex"><span class="nav-number">4.6.</span> <span class="nav-text">substring(int beginIndex)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-valueOf和Integer-toString的区别"><span class="nav-number">4.7.</span> <span class="nav-text">String.valueOf和Integer.toString的区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">coding.H</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
