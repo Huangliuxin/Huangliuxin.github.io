@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="leetcode," />
+  <meta name="keywords" content="DFS，字符串," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="题目:给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。返回所有不常用单词的列表。您可以按任何顺序返回列表。">
-<meta name="keywords" content="leetcode">
+<meta name="description" content="题目给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。">
+<meta name="keywords" content="DFS，字符串">
 <meta property="og:type" content="article">
-<meta property="og:title" content="leetcode888两句话中的不常见单词">
-<meta property="og:url" content="https://huangliuxin.github.io/2018/08/12/leetcode888两句话中的不常见单词/index.html">
+<meta property="og:title" content="leetcode17电话号码的字母组合（String）">
+<meta property="og:url" content="https://huangliuxin.github.io/2018/08/25/leetcode17电话号码的字母组合（String）/index.html">
 <meta property="og:site_name" content="喝酒不骑马">
-<meta property="og:description" content="题目:给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。返回所有不常用单词的列表。您可以按任何顺序返回列表。">
+<meta property="og:description" content="题目给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-17T11:44:04.838Z">
+<meta property="og:image" content="https://huangliuxin.github.io/upload/image/dianhua.png">
+<meta property="og:updated_time" content="2018-08-25T07:17:36.327Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="leetcode888两句话中的不常见单词">
-<meta name="twitter:description" content="题目:给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。返回所有不常用单词的列表。您可以按任何顺序返回列表。">
+<meta name="twitter:title" content="leetcode17电话号码的字母组合（String）">
+<meta name="twitter:description" content="题目给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。">
+<meta name="twitter:image" content="https://huangliuxin.github.io/upload/image/dianhua.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/12/leetcode888两句话中的不常见单词/"/>
+  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/25/leetcode17电话号码的字母组合（String）/"/>
 
 
 
 
 
-  <title>leetcode888两句话中的不常见单词 | 喝酒不骑马</title>
+  <title>leetcode17电话号码的字母组合（String） | 喝酒不骑马</title>
   
 
 
@@ -269,7 +271,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/12/leetcode888两句话中的不常见单词/">
+    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/25/leetcode17电话号码的字母组合（String）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="coding.H">
@@ -286,7 +288,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">leetcode888两句话中的不常见单词</h1>
+          <h1 class="post-title" itemprop="name headline">leetcode17电话号码的字母组合（String）</h1>
         
 
         <div class="post-meta">
@@ -298,8 +300,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T15:50:14+08:00">
-                2018-08-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T15:13:01+08:00">
+                2018-08-25
               </time>
             
 
@@ -358,17 +360,12 @@
       
 
       
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目:"></a>题目:</h2><p>给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。返回所有不常用单词的列表。您可以按任何顺序返回列表。<br><a id="more"></a></p>
-<h3 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h3><p><code>输入：A = &quot;this apple is sweet&quot;, B = &quot;this apple is sour&quot;</code><br><code>输出：[&quot;sweet&quot;,&quot;sour&quot;]</code></p>
-<h3 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h3><p><code>输入：A = &quot;apple apple&quot;, B = &quot;banana&quot;</code><br><code>输出：[&quot;banana&quot;]</code><br>提示：</p>
-<ul>
-<li>0 &lt;= A.length &lt;= 200</li>
-<li>0 &lt;= B.length &lt;= 200</li>
-<li>A 和 B 都只包含空格和小写字母。</li>
-</ul>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>这道题是leetcode Weekly Contest97周的第一道easy题。题目的意思就是要找出两个字符串中不经常出现的单词，这里的不经常出现是指，在一个句子中只出现了一次，在另外一个句子中没有出现。<br>我们考虑把字符串分割后的单词放入一个容器，该容器可以直接判断“是否包含”某个元素，字符串分割后的单词放入该容器中，相同的部分放入另一个容器中，则两个容器不同的部分就是不长出现的单词。这个容器我们可以用List，也可以用Set。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public String[] uncommonFromSentences(String A, String B) &#123;</span><br><span class="line">        String[] a = A.split(&quot; &quot;);</span><br><span class="line">        String[] b = B.split(&quot; &quot;);</span><br><span class="line">        HashSet&lt;String&gt; one = new HashSet&lt;&gt;();</span><br><span class="line">        HashSet&lt;String&gt; two = new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = new ArrayList&lt;&gt;();</span><br><span class="line">        for (String s: a)&#123;</span><br><span class="line">            if (one.contains(s))&#123;</span><br><span class="line">                two.add(s);</span><br><span class="line">            &#125;</span><br><span class="line">            one.add(s);</span><br><span class="line">        &#125;</span><br><span class="line">        for (String s: b)&#123;</span><br><span class="line">            if (one.contains(s))&#123;</span><br><span class="line">                two.add(s);</span><br><span class="line">            &#125;</span><br><span class="line">            one.add(s);</span><br><span class="line">        &#125;</span><br><span class="line">        for (String s: one)&#123;</span><br><span class="line">            if (!two.contains(s))&#123;</span><br><span class="line">                ans.add(s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        String[] res = new String[ans.size()];</span><br><span class="line">        int index=0;</span><br><span class="line">        for (String s:ans)&#123;</span><br><span class="line">            res[index++]=s;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。<br><a id="more"></a><br><img src="/upload/image/dianhua.png" alt=""></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：&quot;23&quot;</span><br><span class="line">输出：[&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</span><br></pre></td></tr></table></figure>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>尽管上面的答案是按字典序排列的，但是你可以任意选择答案输出的顺序。</p>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>本题使用DFS的思想，curr表示当前访问到的字符串，currIdx表示访问digits的位置。例如：</p>
+<p>输入”234“字符串，helper方法会一直访问到currIdx指向digits的最后一位，第一次得到”adg”，把它加入到List，然后回溯到”ad”,继续遍历到最后，把得到的字符串加入List,回溯到”a”，继续深度遍历…最后得到的List就是我们要求的结果。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class solution&#123;</span><br><span class="line">    public List&lt;String&gt; letterCombinations(String digits)&#123;</span><br><span class="line">        List&lt;String&gt; res = new ArrayList&lt;&gt;();</span><br><span class="line">        if(digits==null||digits.length()==0) return res;</span><br><span class="line">        HashMap&lt;Character,char[]&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&apos;2&apos;,new char[]&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;&#125;);</span><br><span class="line">        map.put(&apos;3&apos;,new char[]&#123;&apos;d&apos;,&apos;e&apos;,&apos;f&apos;&#125;);</span><br><span class="line">        map.put(&apos;4&apos;,new char[]&#123;&apos;g&apos;,&apos;h&apos;,&apos;i&apos;&#125;);</span><br><span class="line">        map.put(&apos;5&apos;,new char[]&#123;&apos;j&apos;,&apos;k&apos;,&apos;l&apos;&#125;);</span><br><span class="line">        map.put(&apos;6&apos;,new char[]&#123;&apos;m&apos;,&apos;n&apos;,&apos;o&apos;&#125;);</span><br><span class="line">        map.put(&apos;7&apos;,new char[]&#123;&apos;p&apos;,&apos;q&apos;,&apos;r&apos;,&apos;s&apos;&#125;);</span><br><span class="line">        map.put(&apos;8&apos;,new char[]&#123;&apos;t&apos;,&apos;u&apos;,&apos;v&apos;&#125;);</span><br><span class="line">        map.put(&apos;9&apos;,new char[]&#123;&apos;w&apos;,&apos;x&apos;,&apos;y&apos;,&apos;z&apos;&#125;);</span><br><span class="line">        helper(&quot;&quot;,0,digits,res,map);</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void helper(String curr,int currIdx,String digits,List&lt;String&gt; res,HashMap&lt;Character,char[]&gt; map)&#123;</span><br><span class="line">        if(currIdx==digits.length())&#123;</span><br><span class="line">            res.add(curr);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            char c = digits.charAt(currIdx);</span><br><span class="line">            if(map.containsKey(c))&#123;</span><br><span class="line">                for(Character ch: map.get(c))&#123;</span><br><span class="line">                    helper(curr+ch,currIdx+1,digits,res,map);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -385,7 +382,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/leetcode/" rel="tag"># leetcode</a>
+            <a href="/tags/DFS，字符串/" rel="tag"># DFS，字符串</a>
           
         </div>
       
@@ -398,8 +395,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/11/动态规划从新手到专家（转载）/" rel="next" title="动态规划从新手到专家（转载）">
-                <i class="fa fa-chevron-left"></i> 动态规划从新手到专家（转载）
+              <a href="/2018/08/24/jdk源码阅读-HashMap/" rel="next" title="jdk源码阅读---HashMap">
+                <i class="fa fa-chevron-left"></i> jdk源码阅读---HashMap
               </a>
             
           </div>
@@ -407,10 +404,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/12/连续子数组的最大和（动态规划）/" rel="prev" title="连续子数组的最大和（动态规划）">
-                连续子数组的最大和（动态规划） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -546,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例1"><span class="nav-number">1.1.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例2"><span class="nav-number">1.2.</span> <span class="nav-text">示例2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题解"><span class="nav-number">2.</span> <span class="nav-text">题解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">1.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">1.2.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题解"><span class="nav-number">2.</span> <span class="nav-text">题解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
             
 
           </div>
