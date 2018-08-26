@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://huangliuxin.github.io/2018/08/26/JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E6%B5%85%E6%9E%90/</loc>
+    <lastmod>2018-08-26T07:53:03.475Z</lastmod>
+    <data>
+        <display>
+        <title>JVM内存结构浅析</title>
+        <pubTime>2018-08-26T07:50:29.000Z</pubTime>
+        
+        <tag>JVM，内存结构</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java虚拟机" url="https://huangliuxin.github.io/categories/Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://huangliuxin.github.io/2018/08/25/leetcode22%E6%8B%AC%E5%8F%B7%E7%94%9F%E6%88%90%EF%BC%88String%EF%BC%89/</loc>
     <lastmod>2018-08-25T08:49:35.601Z</lastmod>
     <data>
