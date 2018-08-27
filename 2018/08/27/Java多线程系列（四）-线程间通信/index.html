@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多线程，wait/notify," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="多线程之间除了竞争访问同一个资源外，也经常需要互相协作完成一件事情。那么它们怎么协作呢？我们就来介绍Java多线程协作的基本机制wait/notify。我们前面在多线程的基础知识介绍过，我们通过synchronized来实现多个线程同步调用方法或者执行代码块。而多线程之间的协作机制一般都是使用synchronized和wait/notify共同完成线程间协作。">
+<meta name="keywords" content="多线程，wait&#x2F;notify">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java多线程系列（四）---线程间通信">
+<meta property="og:url" content="https://huangliuxin.github.io/2018/08/27/Java多线程系列（四）-线程间通信/index.html">
+<meta property="og:site_name" content="喝酒不骑马">
+<meta property="og:description" content="多线程之间除了竞争访问同一个资源外，也经常需要互相协作完成一件事情。那么它们怎么协作呢？我们就来介绍Java多线程协作的基本机制wait/notify。我们前面在多线程的基础知识介绍过，我们通过synchronized来实现多个线程同步调用方法或者执行代码块。而多线程之间的协作机制一般都是使用synchronized和wait/notify共同完成线程间协作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-27T10:50:48.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java多线程系列（四）---线程间通信">
+<meta name="twitter:description" content="多线程之间除了竞争访问同一个资源外，也经常需要互相协作完成一件事情。那么它们怎么协作呢？我们就来介绍Java多线程协作的基本机制wait/notify。我们前面在多线程的基础知识介绍过，我们通过synchronized来实现多个线程同步调用方法或者执行代码块。而多线程之间的协作机制一般都是使用synchronized和wait/notify共同完成线程间协作。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/27/Java多线程系列（四）-线程间通信/"/>
+
+
+
+
+
+  <title>Java多线程系列（四）---线程间通信 | 喝酒不骑马</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">喝酒不骑马</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">爱生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/27/Java多线程系列（四）-线程间通信/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="coding.H">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/upload/image/jnbl.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="喝酒不骑马">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java多线程系列（四）---线程间通信</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-27T18:43:56+08:00">
+                2018-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java多线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>多线程之间除了竞争访问同一个资源外，也经常需要互相协作完成一件事情。那么它们怎么协作呢？我们就来介绍Java多线程协作的基本机制wait/notify。我们前面在多线程的基础知识介绍过，我们通过synchronized来实现多个线程同步调用方法或者执行代码块。而多线程之间的协作机制一般都是使用synchronized和wait/notify共同完成线程间协作。<br><a id="more"></a></p>
+<h2 id="wait-notify机制"><a href="#wait-notify机制" class="headerlink" title="wait/notify机制"></a>wait/notify机制</h2><p>我们知道，Java在它的根父类Object类中定义了一些线程协作的基本方法，使得每个对象都可以调用这些方法，这些方法有两类，一类是wait，另一类是notify。</p>
+<p>主要的两个wait方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final void wait() throws InterruptedException</span><br><span class="line">public final native void wait(long timeout) throws InterruptedException;</span><br></pre></td></tr></table></figure></p>
+<p>一个带时间参数，单位是毫秒，表示最多等待这么长时间，参数为0表示无限期等待；一个不带时间参数，表示无限期等待，实际就是调用wait(0)。在等待期间都可以被中断，如果被中断，会抛出InterruptedException。</p>
+<p>我们知道，每个对象都有一把锁和等待队列，一个线程在进入synchronized代码块时，会尝试获取锁，如果获取不到则会把当前线程加入到等待队列中，其实，除了用于锁的等待队列，每个对象还有另一个等待队列，表示条件队列，该队列用于线程间的协作。调用wait就会把当前线程放在条件队列上并阻塞，表示当前线程执行不下去了，他需要等待一个条件，这个条件它自己改变不了，需要其他线程改变。当其他线程改变了条件后，应该调用Object的notify方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final native void notify();</span><br><span class="line">public final native void notifyAll();</span><br></pre></td></tr></table></figure></p>
+<p>notify做的事情就是从条件队列中选一个线程，将其从队列中移除并唤醒。</p>
+<p>看一个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Service &#123;</span><br><span class="line">    public void testMethod(Object lock)&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            synchronized (lock)&#123;</span><br><span class="line">                System.out.println(&quot;begin wait()&quot;);</span><br><span class="line">                lock.wait();</span><br><span class="line">                System.out.println(&quot; end wait()&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch (InterruptedException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void synNotifyMethod(Object lock)&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            synchronized (lock)&#123;</span><br><span class="line">                System.out.println(&quot;begin notify() ThreadName=&quot; + Thread.currentThread().getName() +</span><br><span class="line">                        &quot; time=&quot; +System.currentTimeMillis());</span><br><span class="line">                lock.notify();</span><br><span class="line">                Thread.sleep(1000 * 1);</span><br><span class="line">                System.out.println(&quot;end notify() ThreadName=&quot; + Thread.currentThread().getName() +</span><br><span class="line">                        &quot; time=&quot; + System.currentTimeMillis());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch (InterruptedException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该Service中有两个方法，一个是testMethod方法，包含了wait方法，另一个是synNotifyMethod方法了notify方法，我们首先看一下，wait方法会释放锁的测试。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class ServiceThread extends Thread&#123;</span><br><span class="line">    private Object lock;</span><br><span class="line"></span><br><span class="line">    public ServiceThread(Object lock)&#123;</span><br><span class="line">        this.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        super.run();</span><br><span class="line">        Service service = new Service();</span><br><span class="line">        service.testMethod(lock);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试方法如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void testRun() throws Exception &#123;</span><br><span class="line">    Object lock = new Object();</span><br><span class="line">    new ServiceThread(lock).start();</span><br><span class="line">    new ServiceThread(lock).start();</span><br><span class="line">    Thread.sleep(1000 * 4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">begin wait()</span><br><span class="line">begin wait()</span><br></pre></td></tr></table></figure></p>
+<p>很明显结果是执行了2次同步代码块，其执行的原因，就是因为第一个wait之后，释放掉了对象锁，所以第二个线程才会执行同步代码块。</p>
+<p>还是利用上面的代码，现在我们看一下，notify方法通知等待的线程， 但是不会立即释放锁的例子。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class NotifyServiceThread extends Thread&#123;</span><br><span class="line">    private Object lock;</span><br><span class="line">    public NotifyServiceThread(Object lock)&#123;</span><br><span class="line">        this.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        super.run();</span><br><span class="line">        Service service = new Service();</span><br><span class="line">        service.synNotifyMethod(lock);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试的例子如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class NotifyServiceThreadTest extends TestCase &#123;</span><br><span class="line">    public void testRun() throws Exception &#123;</span><br><span class="line">        Object lock = new Object();</span><br><span class="line">        ServiceThread a = new ServiceThread(lock);</span><br><span class="line">        a.start();</span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">        new NotifyServiceThread(lock).start();</span><br><span class="line">        new NotifyServiceThread(lock).start();</span><br><span class="line"></span><br><span class="line">        Thread.sleep(1000 * 10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">begin wait()</span><br><span class="line">begin notify() ThreadName=Thread-1 time=1484302436105</span><br><span class="line">end notify() ThreadName=Thread-1 time=1484302437108</span><br><span class="line">end wait()</span><br><span class="line">begin notify() ThreadName=Thread-2 time=1484302437108</span><br><span class="line">end notify() ThreadName=Thread-2 time=1484302438110</span><br></pre></td></tr></table></figure></p>
+<p>测试方法，首先调用上wait的例子，让ServiceThread线程进入等待状态，然后执行2个含有notify操作的线程，可以看出，第一个notify执行完，wait线程并没有立即开始运行，而是Thread-1继续执行后续的notify方法，直到同步语句块结束，然后wait线程立即得到锁，并继续运行。之后Thread-2开始运行，直到结束，因为已经没有等待的线程，所以不会有后续的等待的线程运行。 这里，可以看出一个细节，竞争锁的线程有3个，一个包含wait线程，两个包含notify线程。第一个notify执行结束，获得锁一定是阻塞的线程，而不是另一个notify的线程。 上面的程序展现了等待/通知机制是如何通过wait和notify实现。</p>
+<p>wait的具体过程：</p>
+<ol>
+<li>把当前线程放入条件等待队列，释放对象锁，阻塞等待。线程状态变为WAITING或TIMED_WAITING。</li>
+<li>等待时间到或被其他线程调用notify/notifyAll从条件队列中移除，这时，要重新竞争对象锁：</li>
+</ol>
+<ul>
+<li>如果能够获得对象锁，线程状态变为RUNNABLE，并从wait调用中返回。</li>
+<li>否则该线程加入对象锁等待队列，线程状态变为BLOCKED，只有在获得锁后才会从wait调用中返回。</li>
+</ul>
+<p>wait和sleep的区别：</p>
+<ul>
+<li>wait使线程进入等待，是可以被通知唤醒的，但是sleep只能自己到时间唤醒。</li>
+<li>wait方法是对象锁调用的成员方法，而sleep却是Thread类的静态方法</li>
+<li>wait方法出现在同步方法或者同步代码块中，但是sleep方法可以出现在非同步代码中。</li>
+</ul>
+<p>wait使线程进入了阻塞状态，阻塞状态可以细分为3种：</p>
+<ul>
+<li>等待阻塞：运行的线程执行wait方法，JVM会把该线程放入等待队列中。</li>
+<li>同步阻塞：运行的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池当中。</li>
+<li>其他阻塞： 运行的线程执行了Thread.sleep或者join方法，或者发出I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止，或者超时、或者I/O处理完毕时，线程重新转入可运行状态。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>wait/notify方法看上去很简单，但往往难以理解wait等的到底是什么，而notify通知的又是什么，我们需要知道，它们与一个共享的条件变量有关，这个条件变量是程序自己维护的，当条件不成立时，线程调用wait进入条件等待队列，另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。从多线程的角度看，它们围绕共享变量进行协作，从调用wait的线程角度看，它阻塞等待一个条件的成立。我们在设计多线程协作时，需要想清楚协作的共享变量和条件是什么，这是协作的核心。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.cnblogs.com/swiftma/p/6421803.html" target="_blank" rel="noopener">https://www.cnblogs.com/swiftma/p/6421803.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多线程，wait-notify/" rel="tag"># 多线程，wait/notify</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/27/Java多线程系列（三）-CAS/" rel="next" title="Java多线程系列（三）---CAS">
+                <i class="fa fa-chevron-left"></i> Java多线程系列（三）---CAS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/upload/image/jnbl.jpg"
+                alt="coding.H" />
+            
+              <p class="site-author-name" itemprop="name">coding.H</p>
+              <p class="site-description motion-element" itemprop="description">Just Coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wait-notify机制"><span class="nav-number">1.</span> <span class="nav-text">wait/notify机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">2.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">coding.H</span>
+
+  
+</div>
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
