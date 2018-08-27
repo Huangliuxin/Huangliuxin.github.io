@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Map," />
+  <meta name="keywords" content="多线程，CAS," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
-<meta name="keywords" content="Map">
+<meta name="description" content="CAS（Compare and swap或者CompareAndSet）比较和替换是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。这听起来可能有一点复杂但是实际上你理解之后发现很简单，接下来，让我们跟深入的了解一下这项技术。">
+<meta name="keywords" content="多线程，CAS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java集合Map讲解">
-<meta property="og:url" content="https://huangliuxin.github.io/2018/08/07/Java集合Map讲解/index.html">
+<meta property="og:title" content="Java多线程系列（三）---CAS">
+<meta property="og:url" content="https://huangliuxin.github.io/2018/08/27/Java多线程系列（三）-CAS/index.html">
 <meta property="og:site_name" content="喝酒不骑马">
-<meta property="og:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
+<meta property="og:description" content="CAS（Compare and swap或者CompareAndSet）比较和替换是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。这听起来可能有一点复杂但是实际上你理解之后发现很简单，接下来，让我们跟深入的了解一下这项技术。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-08T01:49:26.297Z">
+<meta property="og:updated_time" content="2018-08-27T06:04:44.339Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java集合Map讲解">
-<meta name="twitter:description" content="Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：">
+<meta name="twitter:title" content="Java多线程系列（三）---CAS">
+<meta name="twitter:description" content="CAS（Compare and swap或者CompareAndSet）比较和替换是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。这听起来可能有一点复杂但是实际上你理解之后发现很简单，接下来，让我们跟深入的了解一下这项技术。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/07/Java集合Map讲解/"/>
+  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/27/Java多线程系列（三）-CAS/"/>
 
 
 
 
 
-  <title>Java集合Map讲解 | 喝酒不骑马</title>
+  <title>Java多线程系列（三）---CAS | 喝酒不骑马</title>
   
 
 
@@ -269,7 +269,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/07/Java集合Map讲解/">
+    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/27/Java多线程系列（三）-CAS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="coding.H">
@@ -286,7 +286,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java集合Map讲解</h1>
+          <h1 class="post-title" itemprop="name headline">Java多线程系列（三）---CAS</h1>
         
 
         <div class="post-meta">
@@ -298,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-07T21:19:52+08:00">
-                2018-08-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-27T14:01:38+08:00">
+                2018-08-27
               </time>
             
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">Java基础</span>
+                  <a href="/categories/Java多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java多线程</span>
                   </a>
                 </span>
 
@@ -358,54 +358,27 @@
       
 
       
-        <p>Map用于保存具有映射关系的数据，Map里保存着两组数据：key和value，它们都可以使任何引用类型的数据，但key不能重复。所以通过指定的key就可以取出对应的value。Map接口定义了如下常用的方法：<br><a id="more"></a></p>
-<ol>
-<li><code>void clear()</code>:删除Map中所以键值对。</li>
-<li><code>boolean containsKey(Object key)</code>:查询Map中是否包含指定key，如果包含则返回true。</li>
-<li><code>boolean containsValue(Object value)</code>:查询Map中是否包含指定value，如果包含则返回true。</li>
-<li><code>Set entrySet()</code>:返回Map中所包含的键值对所组成的Set集合，每个集合元素都是Map.Entry对象(Entry是Map的内部类)。</li>
-<li><code>Object get(Object key)</code>:返回指定key所对应的value，如Map中不包含key则返回null。</li>
-<li><code>boolean isEmpty()</code>:查询Map是否为空，如果空则返回true。</li>
-<li><code>Set keySet()</code>:返回该Map中所有key所组成的set集合。</li>
-<li><code>Object put(Object key,Object value)</code>:添加一个键值对，如果已有一个相同的key值则新的键值对覆盖旧的键值对。</li>
-<li><code>void putAll(Map m)</code>:将指定Map中的键值对复制到Map中。</li>
-<li><code>Object remove(Object key)</code>:删除指定key所对应的键值对，返回可以所关联的value，如果key不存在，返回null。</li>
-<li><code>int size()</code>:返回该Map里的键值对的个数。</li>
-<li><code>Collection values()</code>:返回该Map里所有value组成的Collection。</li>
-</ol>
-<p>Map中包含一个内部类：Entry。该类封装了一个键值对，它包含了三个方法：</p>
-<ol>
-<li>Object getKey():返回该Entry里包含的key值。</li>
-<li>Object getValeu():返回该Entry里包含的value值。</li>
-<li>Object setValue(V value):设置该Entry里包含的value值，并返回新设置的value值。</li>
-</ol>
-<h2 id="HashMap和Hashtable实现类"><a href="#HashMap和Hashtable实现类" class="headerlink" title="HashMap和Hashtable实现类"></a>HashMap和Hashtable实现类</h2><h3 id="HashMap与HashTable的区别："><a href="#HashMap与HashTable的区别：" class="headerlink" title="HashMap与HashTable的区别："></a>HashMap与HashTable的区别：</h3><ul>
-<li>同步性：Hashtable是同步的，这个类中的一些方法保证了Hashtable中的对象是线程安全的。而HashMap则是异步的，因此 HashMap中的对象并不是线程安全的。因为同步的要求会影响执行的效率，所以如果你不需要线程安全的集合那么使用HashMap是一个很好的选择，这 样可以避免由于同步带来的不必要的性能开销，从而提高效率。</li>
-<li>值：HashMap可以让你将空值作为一个表的条目的key或value，但是Hashtable是不能放入空值的。HashMap最多只有一个key值为null，但可以有无数多个value值为null。</li>
-</ul>
-<h3 id="两者的性能"><a href="#两者的性能" class="headerlink" title="两者的性能"></a>两者的性能</h3><p>HashMap的性能最好，HashTable的性能是最差（因为它是同步的）</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
-<li>用作key的对象必须实现hashCode和equals方法。</li>
-<li>不能保证其中的键值对的顺序</li>
-<li>尽量不要使用可变对象作为它们的key值。</li>
-</ul>
-<h2 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h2><p>它的父类是HashMap，使用双向链表来维护键值对的次序，迭代顺序与键值对的插入顺序保持一致。LinkedHashMap需要维护元素的插入顺序，so性能略低于HashMap，但在迭代访问元素时有很好的性能，因为它是以链表来维护内部顺序。</p>
-<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>Map接口派生了一个SortMap子接口，SortMap的实现类为TreeMap。TreeMap也是基于红黑树对所有的key进行排序，有两种排序 方式：自然排序和定制排序。Treemap的key以TreeSet的形式存储，对key的要求与TreeSet对元素的要求基本一致。</p>
-<ol>
-<li><code>Map.Entry firstEntry()</code>:返回最小key所对应的键值对，如Map为空，则返回null。</li>
-<li><code>Object firstKey()</code>:返回最小key，如果为空，则返回null。</li>
-<li><code>Map.Entry lastEntry()</code>:返回最大key所对应的键值对，如Map为空，则返回null。</li>
-<li><code>Object lastKey()</code>:返回最大key，如果为空，则返回null。</li>
-<li><code>Map.Entry higherEntry(Object key)</code>:返回位于key后一位的键值对，如果为空，则返回null。</li>
-<li><code>Map.Entry lowerEntry(Object key)</code>:返回位于key前一位的键值对，如果为空，则返回null。</li>
-<li><code>Object lowerKey(Object key)</code>:返回位于key前一位key值，如果为空，则返回null。</li>
-<li><code>NavigableMap subMap(Object fromKey,boolean fromlnclusive,Object toKey,boolean toInciusive)</code>:返回该Map的子Map，其key范围从fromKey到toKey。</li>
-<li><code>SortMap subMap(Object fromKey,Object toKey )</code>;返回该Map的子Map，其key范围从fromkey（包括）到tokey（不包括）。</li>
-<li><code>SortMap tailMap（Object fromkey ,boolean inclusive）</code>:返回该Map的子Map，其key范围大于fromkey（是否包括取决于第二个参数）的所有key。</li>
-<li><code>SortMap headMap（Object tokey ,boolean inclusive）</code>:返回该Map的子Map，其key范围小于tokey（是否包括取决于第二个参数）的所有key。</li>
-</ol>
-<h2 id="WeakHashMap"><a href="#WeakHashMap" class="headerlink" title="WeakHashMap"></a>WeakHashMap</h2><p>WeakHashMap与HashMap的用法基本相同，区别在于：后者的key保留对象的强引用，即只要HashMap对象不被销毁，其对象所有key所引用的对象不会被垃圾回收，HashMap也不会自动删除这些key所对应的键值对对象。但WeakHashMap的key所引用的对象没有被其他强引 用变量所引用，则这些key所引用的对象可能被回收。WeakHashMap中的每个key对象保存了实际对象的弱引用，当回收了该key所对应的实际对象后，WeakHashMap会自动删除该key所对应的键值对。</p>
-<h2 id="IdentityHashMap"><a href="#IdentityHashMap" class="headerlink" title="IdentityHashMap"></a>IdentityHashMap</h2><p>IdentityHashMap与HashMap基本相似，只是当两个key严格相等时，即key1==key2时，它才认为两个key是相等的 。IdentityHashMap也允许使用null，但不保证键值对之间的顺序。</p>
+        <p>CAS（Compare and swap或者CompareAndSet）比较和替换是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。这听起来可能有一点复杂但是实际上你理解之后发现很简单，接下来，让我们跟深入的了解一下这项技术。<br><a id="more"></a></p>
+<h2 id="CAS的使用场景"><a href="#CAS的使用场景" class="headerlink" title="CAS的使用场景"></a>CAS的使用场景</h2><p>在程序和算法中一个经常出现的模式就是“check and act”模式。先检查后操作模式发生在代码中首先检查一个变量的值，然后再基于这个值做一些操作。下面是一个简单的示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class MyLock &#123;</span><br><span class="line"></span><br><span class="line">    private boolean locked = false;</span><br><span class="line"></span><br><span class="line">    public boolean lock() &#123;</span><br><span class="line">        if(!locked) &#123;</span><br><span class="line">            locked = true;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码，如果用在多线程的程序会出现很多错误，不过现在请忘掉它。</p>
+<p>如你所见，lock()方法首先检查 locked成员变量是否等于 false，如果等于，就将 locked 设为 true。</p>
+<p>如果同个线程访问同一个 MyLock 实例，上面的 lock()将不能保证正常工作。如果一个线程检查 locked 的值，然后将其设置为 false，与此同时，一个线程 B 也在检查 locked 的值，又或者，在线程 A 将 locked 的值设为 false 之前。因此，线程 A 和线程 B 可能都看到 locked 的值为 false，然后两者都基于这个信息做一些操作。</p>
+<p>为了在一个多线程程序中良好的工作，”check then act” 操作必须是原子的。原子就是说”check“操作和”act“被当做一个原子代码块执行。不存在多个线程同时执行原子块。</p>
+<p>下面是一个代码示例，把之前的 lock()方法用 synchronized 关键字重构成一个原子块。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class MyLock &#123;</span><br><span class="line"></span><br><span class="line">    private boolean locked = false;</span><br><span class="line"></span><br><span class="line">    public synchronized boolean lock() &#123;</span><br><span class="line">        if(!locked) &#123;</span><br><span class="line">            locked = true;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在 lock()方法是同步的，所以，在某一时刻只能有一个线程在同一个 MyLock 实例上执行它。</p>
+<p>原子的 lock 方法实际上是一个”compare and swap“的例子。</p>
+<h2 id="原子类的实现"><a href="#原子类的实现" class="headerlink" title="原子类的实现"></a>原子类的实现</h2><p>Java提供的原子类是靠 sun 基于 CAS 实现的，CAS 是一种乐观锁。</p>
+<p>原子变量类相当于一种泛化的 volatile 变量，能够支持原子的和有条件的读-改-写操作。AtomicInteger 表示一个int类型的值，并提供了 get 和 set 方法，这些 Volatile 类型的int变量在读取和写入上有着相同的内存语义。它还提供了一个原子的 compareAndSet 方法（如果该方法成功执行，那么将实现与读取/写入一个 volatile 变量相同的内存效果），以及原子的添加、递增和递减等方法。AtomicInteger 表面上非常像一个扩展的 Counter 类，但在发生竞争的情况下能提供更高的可伸缩性，因为它直接利用了硬件对并发的支持。</p>
+<h3 id="AtomicInteger的实现"><a href="#AtomicInteger的实现" class="headerlink" title="AtomicInteger的实现"></a>AtomicInteger的实现</h3><p>AtomicInteger 是一个支持原子操作的 Integer 类，就是保证对 AtomicInteger 类型变量的增加和减少操作是原子性的，不会出现多个线程下的数据不一致问题。如果不使用 AtomicInteger，要实现一个按顺序获取的 ID，就必须在每次获取时进行加锁操作，以避免出现并发时获取到同样的 ID 的现象。</p>
+<p>AtomicInteger的使用方法是简单直接的，它的主要内部成员是：<br><code>private volatile int value;</code><br>注意：它的声明带有volatile，这是必须的，以保证内存可见性。</p>
+<p>它的大部分更新方法实现都是类似，我们看一下方法incrementAndGet，代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public final int incrementAndGet() &#123;</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            int current = get();</span><br><span class="line">            int next = current + 1;</span><br><span class="line">            if (compareAndSet(current, next))</span><br><span class="line">                return next;</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>解释一下：代码的主体是个死循环，先获取当前值current，计算期望的值next，然后调用CAS方法进行更新，如果更新没有成功，说明value被别的线程改了，则再去取最新值并尝试更新直到成功为止。</p>
+<p>synchronized是悲观的，CAS是乐观的；synchronized是一种阻塞式算法，CAS非阻塞方法。</p>
+<p>我们来看一下compareAndSet是怎么实现的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public final boolean compareAndSet(int expect, int update) &#123;</span><br><span class="line">        return unsafe.compareAndSwapInt(this, valueOffset, expect, update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>compareAndSet()方法调用的compareAndSwapInt()方法的声明如下，是一个native方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final native boolean compareAndSwapInt(Object var1, long var2, int var4, intvar5);</span><br></pre></td></tr></table></figure></p>
+<p>compareAndSet 传入的为执行方法时获取到的 value 属性值，next 为加 1 后的值， compareAndSet 所做的为调用 Sun 的 UnSafe 的 compareAndSwapInt 方法来完成，此方法为 native 方法，compareAndSwapInt 基于的是 CPU 的 CAS 指令来实现的。所以基于 CAS 的操作可认为是无阻塞的，一个线程的失败或挂起不会引起其它线程也失败或挂起。并且由于 CAS 操作是 CPU 原语，所以性能比较好。</p>
+<h2 id="ABA问题"><a href="#ABA问题" class="headerlink" title="ABA问题"></a>ABA问题</h2><p>使用CAS方式更新会有一个ABA问题。该问题是指：假设当前值为A，如果另一个线程先将A修改为B，再修改回成A，当前线程的CAS操作无法分辨当前值发生过变化。</p>
+<p>解决方法是：使用AtomicStampedReference，在修改值的同时附加一个时间戳，只有时间戳和值都相同才进行修改。</p>
 
       
     </div>
@@ -423,7 +396,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Map/" rel="tag"># Map</a>
+            <a href="/tags/多线程，CAS/" rel="tag"># 多线程，CAS</a>
           
         </div>
       
@@ -436,8 +409,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/31/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/08/26/JVM内存结构浅析/" rel="next" title="JVM内存结构浅析">
+                <i class="fa fa-chevron-left"></i> JVM内存结构浅析
               </a>
             
           </div>
@@ -445,10 +418,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/08/快速排序/" rel="prev" title="快速排序">
-                快速排序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -584,7 +553,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap和Hashtable实现类"><span class="nav-number">1.</span> <span class="nav-text">HashMap和Hashtable实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap与HashTable的区别："><span class="nav-number">1.1.</span> <span class="nav-text">HashMap与HashTable的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两者的性能"><span class="nav-number">1.2.</span> <span class="nav-text">两者的性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">1.3.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedHashMap"><span class="nav-number">2.</span> <span class="nav-text">LinkedHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap"><span class="nav-number">3.</span> <span class="nav-text">TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakHashMap"><span class="nav-number">4.</span> <span class="nav-text">WeakHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IdentityHashMap"><span class="nav-number">5.</span> <span class="nav-text">IdentityHashMap</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS的使用场景"><span class="nav-number">1.</span> <span class="nav-text">CAS的使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原子类的实现"><span class="nav-number">2.</span> <span class="nav-text">原子类的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AtomicInteger的实现"><span class="nav-number">2.1.</span> <span class="nav-text">AtomicInteger的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ABA问题"><span class="nav-number">3.</span> <span class="nav-text">ABA问题</span></a></li></ol></div>
             
 
           </div>
