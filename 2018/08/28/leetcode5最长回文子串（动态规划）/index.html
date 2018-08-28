@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="排序," />
+  <meta name="keywords" content="动态规划，字符串," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="归并排序的基本思想：归并排序其实有两个过程，即分和治的过程。先“分割”再“合并”，我们把一个未排序的序列分成两部分，再分为4部分，依次分割下去，直到分成一个一个数据，我们可以认为单个的数据是已经排好序的。第二步，把这些排好序的数据两两归并到一起，使之有序，不停的归并，最后成为一个排好序的序列。">
-<meta name="keywords" content="排序">
+<meta name="description" content="题目给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为1000。">
+<meta name="keywords" content="动态规划，字符串">
 <meta property="og:type" content="article">
-<meta property="og:title" content="归并排序">
-<meta property="og:url" content="https://huangliuxin.github.io/2018/08/09/归并排序/index.html">
+<meta property="og:title" content="leetcode5最长回文子串（动态规划）">
+<meta property="og:url" content="https://huangliuxin.github.io/2018/08/28/leetcode5最长回文子串（动态规划）/index.html">
 <meta property="og:site_name" content="喝酒不骑马">
-<meta property="og:description" content="归并排序的基本思想：归并排序其实有两个过程，即分和治的过程。先“分割”再“合并”，我们把一个未排序的序列分成两部分，再分为4部分，依次分割下去，直到分成一个一个数据，我们可以认为单个的数据是已经排好序的。第二步，把这些排好序的数据两两归并到一起，使之有序，不停的归并，最后成为一个排好序的序列。">
+<meta property="og:description" content="题目给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为1000。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-09T15:42:22.745Z">
+<meta property="og:updated_time" content="2018-08-28T14:51:54.830Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="归并排序">
-<meta name="twitter:description" content="归并排序的基本思想：归并排序其实有两个过程，即分和治的过程。先“分割”再“合并”，我们把一个未排序的序列分成两部分，再分为4部分，依次分割下去，直到分成一个一个数据，我们可以认为单个的数据是已经排好序的。第二步，把这些排好序的数据两两归并到一起，使之有序，不停的归并，最后成为一个排好序的序列。">
+<meta name="twitter:title" content="leetcode5最长回文子串（动态规划）">
+<meta name="twitter:description" content="题目给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为1000。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/09/归并排序/"/>
+  <link rel="canonical" href="https://huangliuxin.github.io/2018/08/28/leetcode5最长回文子串（动态规划）/"/>
 
 
 
 
 
-  <title>归并排序 | 喝酒不骑马</title>
+  <title>leetcode5最长回文子串（动态规划） | 喝酒不骑马</title>
   
 
 
@@ -269,7 +269,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/09/归并排序/">
+    <link itemprop="mainEntityOfPage" href="https://huangliuxin.github.io/2018/08/28/leetcode5最长回文子串（动态规划）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="coding.H">
@@ -286,7 +286,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">归并排序</h1>
+          <h1 class="post-title" itemprop="name headline">leetcode5最长回文子串（动态规划）</h1>
         
 
         <div class="post-meta">
@@ -298,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-09T23:41:15+08:00">
-                2018-08-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T22:50:19+08:00">
+                2018-08-28
               </time>
             
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">leetcode</span>
                   </a>
                 </span>
 
@@ -358,18 +358,13 @@
       
 
       
-        <p>归并排序的基本思想：归并排序其实有两个过程，即分和治的过程。先“分割”再“合并”，我们把一个未排序的序列分成两部分，再分为4部分，依次分割下去，直到分成一个一个数据，我们可以认为单个的数据是已经排好序的。第二步，把这些排好序的数据两两归并到一起，使之有序，不停的归并，最后成为一个排好序的序列。<br><a id="more"></a></p>
-<h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><ul>
-<li>分割过程：把长度为N的输入序列分成两个长度为N/2的子序列，然后再分割，直到每个序列的长度为1。</li>
-<li>合并的过程：merge过程就是把每个子序列两两合并，直到最终得到一个排好序的序列。</li>
-<li>将排好序的数组再复制回原数组。</li>
-</ul>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class MergeSort&#123;</span><br><span class="line">    public static int[] sort(int[] a,int low,int high)&#123;</span><br><span class="line">        int mid = (low+high)/2;</span><br><span class="line">        if(low&lt;high)&#123;</span><br><span class="line">            sort(a,low,mid);</span><br><span class="line">            sort(a,mid+1,high);</span><br><span class="line">            merge(a,low,mid,high);</span><br><span class="line">        &#125;</span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void merge(int[] a,int low,int mid,int high)&#123;</span><br><span class="line">        int[] temp = new int[high-low+1];</span><br><span class="line">        int i =low;</span><br><span class="line">        int j = mid+1;</span><br><span class="line">        int k = 0;</span><br><span class="line">        //把较小的数先移到新数组中</span><br><span class="line">        while(i&lt;=mid&amp;&amp;j&lt;=high)&#123;</span><br><span class="line">            if(a[i]&lt;a[j])&#123;</span><br><span class="line">                temp[k++]=a[i++];</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                temp[k++]=a[j++];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //把左边剩余的数移入数组</span><br><span class="line">        while(i&lt;=mid)&#123;</span><br><span class="line">            temp[k++] = a[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        // 把右边边剩余的数移入数组</span><br><span class="line">        while(j&lt;=high)&#123;</span><br><span class="line">            temp[k++] = a[j++];</span><br><span class="line">        &#125;</span><br><span class="line">        //把新数组中的数覆盖nums数组</span><br><span class="line">        for(int x=0;x&lt;temp.length;x++)&#123;</span><br><span class="line">            a[x+low] = temp[x];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] array = new int[]&#123;6,3,8,2,9,1&#125;;</span><br><span class="line">        System.out.println(Arrays.toString(sort(array,0,5)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h2><ul>
-<li>时间效率：O(nlogn)</li>
-<li>空间效率：O(n)</li>
-<li>稳定性： 稳定</li>
-</ul>
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为1000。<br><a id="more"></a></p>
+<h3 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;</span><br><span class="line">注意: &quot;aba&quot;也是一个有效答案。</span><br></pre></td></tr></table></figure>
+<h3 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;cbbd&quot;</span><br><span class="line">输出: &quot;bb&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>回文字符串具有一个性质：当去掉回文字符串的首尾字符后，剩下的子字符串仍然是回文的。反过来利用这个性质，如果我们已经知道了一个子字符串s[i + 1…..j - 1]是回文的，那么如果该字符串的前后字符相等，即s[i] == s[j]，就可以直接判断s[i……j]是回文的。</p>
+<p>用dp[i][j]表示s[i…j]是否回文，是就为true，不是就为false。</p>
+<p>那么当s[i] == s[j]的时候，dp[i][j] = dp[i+1][j-1],这是根据回文串的特点，比较容易理解的，比如我们知道bab是回文串，如果a = a,那么ababa也就是回文串！<br>唯一注意一点就是在判断dp[i+1][j-1]之前检查j-i&lt;=2是否满足。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class colution &#123;</span><br><span class="line">    public String longestPalindrome(String s) &#123;</span><br><span class="line">        if (s==null||s.length()==0) return s;</span><br><span class="line">        String res = &quot;&quot;;</span><br><span class="line">        boolean[][] dp = new boolean[s.length()][s.length()];</span><br><span class="line">        int max =0;</span><br><span class="line">        for (int i = s.length()-1; i &gt;=0 ; i--) &#123;</span><br><span class="line">            for (int j = i; j &lt;s.length(); j++) &#123;</span><br><span class="line">                dp[i][j] =s.charAt(i)==s.charAt(j)&amp;&amp;((j-i&lt;=2)||dp[i+1][j-1]);</span><br><span class="line">                if (dp[i][j])&#123;</span><br><span class="line">                    if (j-i+1&gt;max)&#123;</span><br><span class="line">                        max = j-i+1;</span><br><span class="line">                        res = s.substring(i,j+1);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -387,7 +382,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/排序/" rel="tag"># 排序</a>
+            <a href="/tags/动态规划，字符串/" rel="tag"># 动态规划，字符串</a>
           
         </div>
       
@@ -400,8 +395,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/09/LeetCode43字符串相乘/" rel="next" title="LeetCode43字符串相乘">
-                <i class="fa fa-chevron-left"></i> LeetCode43字符串相乘
+              <a href="/2018/08/28/Java多线程（五）-显式锁和ReentrantLock/" rel="next" title="Java多线程（五）---显式锁和ReentrantLock">
+                <i class="fa fa-chevron-left"></i> Java多线程（五）---显式锁和ReentrantLock
               </a>
             
           </div>
@@ -409,10 +404,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/11/动态规划从新手到专家（转载）/" rel="prev" title="动态规划从新手到专家（转载）">
-                动态规划从新手到专家（转载） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -548,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法描述"><span class="nav-number">1.</span> <span class="nav-text">算法描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法分析"><span class="nav-number">3.</span> <span class="nav-text">算法分析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例1"><span class="nav-number">1.1.</span> <span class="nav-text">示例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例2"><span class="nav-number">1.2.</span> <span class="nav-text">示例2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题解"><span class="nav-number">2.</span> <span class="nav-text">题解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
             
 
           </div>
